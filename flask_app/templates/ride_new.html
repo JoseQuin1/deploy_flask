@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" 
+        integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+        <link rel="stylesheet" href="{{ url_for('static',filename='/style.css' )}}">
+        <title>Ohana Rideshares</title>
+</head>
+<body>
+        <header class="col-6 mt-5 mx-auto d-flex justify-content-between">
+                <h1>Request a Ride</h1>
+                <div class="d-flex justify-content-between mx-2">
+                        <a href="/dashboard" class="mr-5">home</a>
+                        <a href="/logout">logout</a>
+                </div>
+        </header>
+        <div class="col-6 mx-auto">
+                {% with messages = get_flashed_messages(category_filter=[ 'new_ride' ]) %}    <!-- declare a variable called messages -->
+                        {% if messages %}       <!-- check if there are any messages -->
+                                {% for message in messages %}   <!-- loop through the messages -->
+                                <p class="text-danger">{{message}}</p>  <!-- display each message in a paragraph tag -->
+                                {% endfor %}
+                        {% endif %}
+                {% endwith %}
+        </div>
+        <main class="col-6 mx-auto">
+                <form action="/ride/request" method="post" class="col-7 mt-5">
+                        <div class="mb-3 row d-flex justify-content-between">
+                                <label for="destination" class="col-form-label">Destination:</label>
+                                <div class="col-sm-7">
+                                        <input type="text" name="destination" class="form-control">
+                                </div>
+                        </div>
+                        <div class="mb-3 row d-flex justify-content-between">
+                                <label for="pickup_location" class="col-form-label">Pick-up Location:</label>
+                                <div class="col-sm-7">
+                                        <input type="text" name="pickup_location" class="form-control">
+                                </div>
+                        </div>
+                        <div class="mb-3 row d-flex justify-content-between">
+                                <label for="rideshare_date" class="col-form-label">Rideshare Date:</label>
+                                <div class="col-sm-7">
+                                        <input type="date" name="rideshare_date" class="form-control">
+                                </div>
+                        </div>
+                        <div class=" row d-flex justify-content-between">
+                                <label for="details">Details:</label>
+                                <div class="col-sm-7">
+                                        <textarea name="details" id="details" cols="30" rows="5" class="" ></textarea>
+                                </div>
+                        </div>
+                        <div class="d-flex justify-content-end mt-3">
+                                <button type="submit" class="btn btn-sucess col-2 border border-1 bg-primary">Post</button>
+                        </div>
+                </form>
+        </main>
+</body>
+</html>

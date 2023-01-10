@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" 
+        integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+        <link rel="stylesheet" href="{{ url_for('static',filename='/style.css' )}}">
+        <title>Ohana Rideshares</title>
+</head>
+<body>
+        <header class="col-6 mt-5 mx-auto d-flex justify-content-between border-bottom">
+                <h3>Welcome, {{ user.first_name }}</h3>
+                <div class="d-flex justify-content-between mx-2">
+                        <a href="/ride/new" class="mr-5">Request a Ride</a>
+                        <a href="/logout">Logout</a>
+                </div>
+        </header>
+        <main class="col-6 m-auto d-flex justify-content-between">
+                <div class = "container mt-5">
+                        <h2 class= "col-9 m-auto">Rideshare Requests</h2>
+                        {% for ride in rides %}
+                                {% if not ride.driver_id %}
+                                <div class=" border border-dark d-flex justify-content-center my-3 bg-warning">
+                                        <div class="">
+                                                <p>Rider:</p> 
+                                                <p>Destination: </p>
+                                                <p>When needed:</p>
+                                        </div>
+                                        <div class="">
+                                                <p class="ml-5">{{ ride.users.first_name }}</p>
+                                                <p class="ml-5">{{ ride.destination }}</p>
+                                                <p class="ml-5">{{ ride.rideshare_date.strftime('%B %d') }}</p>
+                                                {% if ride.user_id == session[ 'user_id' ] %}
+                                                <p class="d-flex justify-content-end"><a href="/delete/{{ ride.id }}" class="">DELETE</a></p>
+                                                {%else%}
+                                                <p class="d-flex justify-content-end"><a href="/assign/driver/{{ ride.id }}" class="">I can drive</a></p>
+                                                {% endif %}
+                                        </div>
+                                </div>
+                                {% endif %}
+                        {% endfor %}
+                </div>
+                <div class = "container mt-5">
+                        <h2 class= "col-9 m-auto">Booked Rideshares</h2>
+                        {% for user in all_users %}
+                                {% for ride in  rides %}
+                                        {% if ride.driver_id and ride.driver_id==user.id%}
+                                        <div class=" border border-dark d-flex flex-column justify-content-center my-3 px-3 pt-2">
+                                                <p><span class="font-weight-bold">{{ user.first_name }}</span> is driving <span class="font-weight-bold">{{ ride.users.first_name }}</span> <br>to the {{ ride.destination }}
+                                                        on {{ ride.rideshare_date.strftime('%B %d') }}
+                                                </p>
+                                                {% if ride.driver_id == session['user_id'] %}
+                                                <div class="mb-2">
+                                                        <a href="/rides/{{ride.id}}">details</a> | 
+                                                        <a href="/remove/driver/{{ride.id}}">cancel</a>
+                                                </div>
+                                                {% endif %}
+                                                {% if ride.driver_id != session['user_id'] and ride.user_id == session['user_id']%}
+                                                <div class="mb-2">
+                                                        <a href="/rides/{{ride.id}}">details</a>
+                                                </div>
+                                                {% endif %}
+                                        </div>
+                                        {% endif %}
+                                {% endfor %}
+                        {% endfor %}
+                </div>
+        </main>
+</body>
+</html>
